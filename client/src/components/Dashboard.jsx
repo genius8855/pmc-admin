@@ -2,8 +2,10 @@ import React from 'react'
 
 const Dashboard = () => {
     return (
-        <div className='bg-red-500'>
-            Dashboard page
+        <div className='p-5 bg-[#E6F1F8] w-full'>
+            <div className=''>
+                Hello
+            </div>
         </div>
     )
 }

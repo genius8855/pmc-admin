@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const pool = require('./config/connect');
 const adminRoute = require('./routes/admin');
+const homeRoute = require('./routes/home');
 
 const app = express();
 const port = process.env.PORT;
@@ -13,6 +14,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/admin', adminRoute);
+app.use('/api/home', homeRoute);
 
 app.listen(port, () => {
     console.log(`Express server started at http://localhost:${port}`);

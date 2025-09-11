@@ -13,6 +13,9 @@ const {
     addHotDealsPackages,
     deleteHotDealsPackages,
     getHotDealsPackages,
+    addCelebrityEndorsement,
+    getCelebrityEndorsements,
+    deleteCelebrityEndorsement,
 }
     = require("../controllers/home");
 
@@ -33,5 +36,10 @@ router.delete('/news-channels/:id', deleteNewsChannels);
 router.post("/hot-deals", upload.single("image"), addHotDealsPackages);
 router.get("/hot-deals", getHotDealsPackages);
 router.delete("/hot-deals/:id", deleteHotDealsPackages);
+
+router.post("/celebrity-endorsement", upload.single("image"), addCelebrityEndorsement);
+router.get("/celebrity-endorsements", getCelebrityEndorsements);
+router.delete("/celebrity-endorsement/:id", deleteCelebrityEndorsement);
+
 
 module.exports = router;

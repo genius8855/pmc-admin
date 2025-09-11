@@ -6,6 +6,10 @@
   font-family: "Mona Sans";
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .logo {
   position: relative;
   border-radius: 10px;
@@ -29,25 +33,30 @@
 }
 
 @keyframes growradius {
-  0%{
-    transform:translate(-50%,-50%) rotate(-40deg);
+  0% {
+    transform: translate(-50%, -50%) rotate(-40deg);
   }
-  20%{
-    transform: translate(-50%,-50%) rotate(45deg);
+
+  20% {
+    transform: translate(-50%, -50%) rotate(45deg);
     border-radius: 40%;
   }
+
   40% {
-    transform: translate(-50%, -50%) rotate(90deg) ;
+    transform: translate(-50%, -50%) rotate(90deg);
     border-radius: 42%;
   }
+
   60% {
     transform: translate(-50%, -50%) rotate(135deg);
     border-radius: 44%;
   }
+
   80% {
     transform: translate(-50%, -50%) rotate(270deg);
     border-radius: 46%;
   }
+
   100% {
     transform: translate(-50%, -50%) rotate(360deg);
     border-radius: 48%;

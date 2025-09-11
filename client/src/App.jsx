@@ -2,6 +2,9 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 import Dashboard from './components/Dashboard'
 import RootLayout from './layout/RootLayout'
 import Banners from './components/Banners'
+import Services from './components/Services'
+import Channels from './components/Channels'
+import NewsChannels from './components/NewsChannels'
 
 function App() {
 
@@ -10,16 +13,15 @@ function App() {
       <Route path='/' element={<RootLayout />}>
         <Route index element={<Dashboard />} />
         <Route path='banners' element={<Banners/>}/>
+        <Route path='services' element={<Services/>}/>
+        <Route path='channels' element={<Channels/>}/>
+        <Route path='newschannels' element={<NewsChannels/>}/>
       </Route>
     )
   )
 
   return (
-    <div className='bg-[#3F89AD] w-full h-screen p-5'>
-      <div className='w-[90%] h-full bg-white rounded-4xl mx-auto overflow-hidden flex gap-4'>
-        <RouterProvider router={router}/>
-      </div>
-    </div>
+    <RouterProvider router={router}/>
   )
 }
 

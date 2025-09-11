@@ -249,6 +249,65 @@ const deleteHotDealsPackages = async (req, res) => {
   }
 };
 
+const addCelebrityEndorsement = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "Celebrity image is required" });
+    }
+    const imageUrl = path.join("/uploads", req.file.filename);
+    const [result] = await pool.query(
+      "INSERT INTO celebrity_endorsements (image) VALUES (?)",
+      [imageUrl]
+    );
+      return res.status(201).json({
+      message: "Celebrity endorsement added successfully",
+    });
+  } catch (error) {
+    console.error("Error adding celebrity endorsement:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+const getCelebrityEndorsements = async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT * FROM celebrity_endorsements ORDER BY created_at DESC"
+    );
+    return res.json(rows);
+  } catch (error) {
+    console.error("Error fetching celebrity endorsements:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const deleteCelebrityEndorsement = async (req, res) => {
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(400).json({ message: "Id is required" });
+  }
+
+  try {
+    const [result] = await pool.query(
+      "DELETE FROM celebrity_endorsements WHERE id = ?",
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Celebrity endorsement not found" });
+    }
+
+    return res.status(200).json({ message: "Celebrity endorsement deleted successfully" });
+  } catch (error) {
+    console.error("Error while deleting celebrity endorsement:", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+
+
 
 module.exports = {
   addServices,
@@ -262,5 +321,8 @@ module.exports = {
   getNewsChannels,
   addHotDealsPackages,
   deleteHotDealsPackages,
-  getHotDealsPackages
+  getHotDealsPackages,
+  addCelebrityEndorsement,
+ getCelebrityEndorsements,
+  deleteCelebrityEndorsement,
 };

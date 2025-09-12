@@ -306,6 +306,195 @@ const deleteCelebrityEndorsement = async (req, res) => {
 };
 
 
+const addAward = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "Award image is required" });
+    }
+    const imageUrl = path.join("/uploads", req.file.filename);
+
+    const [result] = await pool.query(
+      "INSERT INTO awards (image) VALUES (?)",
+      [imageUrl]
+    );
+
+    return res.status(201).json({
+      message: "Award added successfully",
+    });
+  } catch (error) {
+    console.error("Error adding award:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+const getAwards = async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM awards ORDER BY created_at DESC");
+    return res.status(200).json(rows);
+  } catch (error) {
+    console.error("Error fetching awards:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+
+const deleteAward = async (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    return res.status(400).json({ message: "Award ID is required" });
+  }
+
+  try {
+    const [result] = await pool.query("DELETE FROM awards WHERE id = ?", [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Award not found" });
+    }
+    return res.status(200).json({ message: "Award deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting award:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+const addGalleryImage = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "Gallery image is required" });
+    }
+    const imageUrl = path.join("/uploads", req.file.filename);
+
+    const [result] = await pool.query(
+      "INSERT INTO gallery (image) VALUES (?)",
+      [imageUrl]
+    );
+
+    return res.status(201).json({
+      message: "Gallery image added successfully",
+      galleryId: result.insertId,
+      image: imageUrl,
+    });
+  } catch (error) {
+    console.error("Error adding gallery image:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+const getGalleryImages = async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM gallery ORDER BY created_at DESC");
+    return res.status(200).json(rows);
+  } catch (error) {
+    console.error("Error fetching gallery images:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+const deleteGalleryImage = async (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    return res.status(400).json({ message: "Gallery ID is required" });
+  }
+
+  try {
+    const [rows] = await pool.query("SELECT image FROM gallery WHERE id = ?", [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Gallery image not found" });
+    }
+
+    const [result] = await pool.query("DELETE FROM gallery WHERE id = ?", [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Gallery image not found" });
+    }
+  
+    return res.status(200).json({ message: "Gallery image deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting gallery image:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+const addBanner = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "Banner image is required" });
+    }
+
+    // Prepare image URL
+    const imageUrl = path.join("/uploads", req.file.filename);
+
+    // Insert into banners table
+    const [result] = await pool.query(
+      "INSERT INTO banners (image) VALUES (?)",
+      [imageUrl]
+    );
+
+    return res.status(201).json({
+      message: "Banner added successfully",
+      bannerId: result.insertId,
+      image: imageUrl,
+    });
+  } catch (error) {
+    console.error("Error adding banner:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// ✅ GET - All Banners
+const getBanners = async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM banners ORDER BY created_at DESC");
+    return res.json(rows);
+  } catch (error) {
+    console.error("Error fetching banners:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// ✅ DELETE - Banner by ID (also delete file from server)
+const deleteBanner = async (req, res) => {
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(400).json({ message: "Banner ID is required" });
+  }
+
+  try {
+    // Get image path from DB
+    const [rows] = await pool.query("SELECT image FROM banners WHERE id = ?", [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Banner not found" });
+    }
+
+    const imagePath = path.join(__dirname, "..", rows[0].image);
+
+    // Delete from database
+    const [result] = await pool.query("DELETE FROM banners WHERE id = ?", [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Banner not found" });
+    }
+
+   
+    fs.unlink(imagePath, (err) => {
+      if (err) console.warn("⚠️ Could not delete image file:", err.message);
+    });
+
+    return res.status(200).json({ message: "Banner deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting banner:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
 
 
 
@@ -323,6 +512,15 @@ module.exports = {
   deleteHotDealsPackages,
   getHotDealsPackages,
   addCelebrityEndorsement,
- getCelebrityEndorsements,
+  getCelebrityEndorsements,
   deleteCelebrityEndorsement,
+  addAward,
+  getAwards,
+  deleteAward,
+  addGalleryImage,
+  getGalleryImages,
+  deleteGalleryImage,
+  addBanner, 
+  getBanners,
+  deleteBanner
 };

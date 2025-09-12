@@ -256,7 +256,7 @@ const addCelebrityEndorsement = async (req, res) => {
     }
     const imageUrl = path.join("/uploads", req.file.filename);
     const [result] = await pool.query(
-      "INSERT INTO celebrity_endorsements (image) VALUES (?)",
+      "INSERT INTO celebrityendorsement (image) VALUES (?)",
       [imageUrl]
     );
       return res.status(201).json({
@@ -272,7 +272,7 @@ const addCelebrityEndorsement = async (req, res) => {
 const getCelebrityEndorsements = async (req, res) => {
   try {
     const [rows] = await pool.query(
-      "SELECT * FROM celebrity_endorsements ORDER BY created_at DESC"
+      "SELECT * FROM celebrityendorsement ORDER BY createdAt DESC"
     );
     return res.json(rows);
   } catch (error) {
@@ -290,7 +290,7 @@ const deleteCelebrityEndorsement = async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      "DELETE FROM celebrity_endorsements WHERE id = ?",
+      "DELETE FROM celebrityendorsement WHERE id = ?",
       [id]
     );
 
@@ -330,7 +330,7 @@ const addAward = async (req, res) => {
 
 const getAwards = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM awards ORDER BY created_at DESC");
+    const [rows] = await pool.query("SELECT * FROM awards ORDER BY createdAt DESC");
     return res.status(200).json(rows);
   } catch (error) {
     console.error("Error fetching awards:", error);
@@ -386,7 +386,7 @@ const addGalleryImage = async (req, res) => {
 
 const getGalleryImages = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM gallery ORDER BY created_at DESC");
+    const [rows] = await pool.query("SELECT * FROM gallery ORDER BY createdAt DESC");
     return res.status(200).json(rows);
   } catch (error) {
     console.error("Error fetching gallery images:", error);
@@ -449,7 +449,7 @@ const addBanner = async (req, res) => {
 // ✅ GET - All Banners
 const getBanners = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM banners ORDER BY created_at DESC");
+    const [rows] = await pool.query("SELECT * FROM banners ORDER BY createdAt DESC");
     return res.json(rows);
   } catch (error) {
     console.error("Error fetching banners:", error);
@@ -457,35 +457,24 @@ const getBanners = async (req, res) => {
   }
 };
 
-// ✅ DELETE - Banner by ID (also delete file from server)
+
 const deleteBanner = async (req, res) => {
   const id = req.params.id;
 
   if (!id) {
     return res.status(400).json({ message: "Banner ID is required" });
   }
-
   try {
-    // Get image path from DB
     const [rows] = await pool.query("SELECT image FROM banners WHERE id = ?", [id]);
-
     if (rows.length === 0) {
       return res.status(404).json({ message: "Banner not found" });
     }
 
-    const imagePath = path.join(__dirname, "..", rows[0].image);
-
-    // Delete from database
     const [result] = await pool.query("DELETE FROM banners WHERE id = ?", [id]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Banner not found" });
     }
-
-   
-    fs.unlink(imagePath, (err) => {
-      if (err) console.warn("⚠️ Could not delete image file:", err.message);
-    });
 
     return res.status(200).json({ message: "Banner deleted successfully" });
   } catch (error) {

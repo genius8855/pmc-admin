@@ -16,6 +16,15 @@ const {
     addCelebrityEndorsement,
     getCelebrityEndorsements,
     deleteCelebrityEndorsement,
+    addAward,
+    getAwards,
+    deleteAward,
+    addGalleryImage,
+    getGalleryImages,
+    deleteGalleryImage,
+    addBanner, 
+    getBanners,
+    deleteBanner
 }
     = require("../controllers/home");
 
@@ -41,5 +50,16 @@ router.post("/celebrity-endorsement", upload.single("image"), addCelebrityEndors
 router.get("/celebrity-endorsements", getCelebrityEndorsements);
 router.delete("/celebrity-endorsement/:id", deleteCelebrityEndorsement);
 
+router.post("/awards", upload.single("image"), addAward);
+router.get("/awards", getAwards);
+router.delete("/awards/:id", deleteAward);
+
+router.post("/gallery", upload.single("image"), addGalleryImage);
+router.get("/gallery", getGalleryImages);
+router.delete("/gallery/:id", deleteGalleryImage);
+
+router.post("/banners", upload.single("image"), addBanner);
+router.get("/banners", getBanners);
+router.delete("/banners/:id", deleteBanner);
 
 module.exports = router;

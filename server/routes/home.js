@@ -47,7 +47,7 @@ router.get("/hot-deals", getHotDealsPackages);
 router.delete("/hot-deals/:id", deleteHotDealsPackages);
 
 router.post("/celebrity-endorsement", upload.single("image"), addCelebrityEndorsement);
-router.get("/celebrity-endorsements", getCelebrityEndorsements);
+router.get("/celebrity-endorsement", getCelebrityEndorsements);
 router.delete("/celebrity-endorsement/:id", deleteCelebrityEndorsement);
 
 router.post("/awards", upload.single("image"), addAward);

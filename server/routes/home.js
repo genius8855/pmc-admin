@@ -22,9 +22,6 @@ const {
     addGalleryImage,
     getGalleryImages,
     deleteGalleryImage,
-    addBanner, 
-    getBanners,
-    deleteBanner
 }
     = require("../controllers/home");
 
@@ -57,9 +54,5 @@ router.delete("/awards/:id", deleteAward);
 router.post("/gallery", upload.single("image"), addGalleryImage);
 router.get("/gallery", getGalleryImages);
 router.delete("/gallery/:id", deleteGalleryImage);
-
-router.post("/banners", upload.single("image"), addBanner);
-router.get("/banners", getBanners);
-router.delete("/banners/:id", deleteBanner);
 
 module.exports = router;
